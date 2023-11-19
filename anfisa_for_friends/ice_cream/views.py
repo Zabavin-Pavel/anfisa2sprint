@@ -1,9 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+
+from ice_cream.models import IceCream
 
 
 def ice_cream_detail(request, pk):
     template = 'ice_cream/detail.html'
-    context = {}
+    # ice_cream = IceCream.objects.get(id = pk)
+    ice_cream = get_object_or_404(
+        IceCream.objects.values(
+            'title', 'description'
+        ).filter(is_published = True),
+        id = pk
+    )
+    context = {
+        'ice_cream': ice_cream,
+    }
     return render(request, template, context)
 
 
